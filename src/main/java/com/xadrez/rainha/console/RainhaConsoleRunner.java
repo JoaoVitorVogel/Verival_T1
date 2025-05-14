@@ -16,6 +16,10 @@ public class RainhaConsoleRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        run();
+    }
+    
+    public void run() throws Exception {
         Scanner scanner = new Scanner(System.in);
         
         System.out.println("Calculadora de Movimentos da Rainha no Xadrez");
