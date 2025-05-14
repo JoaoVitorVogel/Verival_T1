@@ -30,18 +30,18 @@ Para cada caso de teste da entrada, seu programa deve imprimir uma única linha 
 ---
 
 ## Exemplo de Entrada
-
+```
 4 4 6 2
 3 5 3 5
 5 5 4 3
 0 0 0 0
-
+```
 ## Exemplo de Saída
-
+```
 1
 0
 2
-
+```
 ### Observações
 
 - O número de movimentos é calculado com base no movimento da dama no tabuleiro, ou seja, ela pode se mover qualquer quantidade de casas em linha reta na horizontal, vertical ou diagonal.
