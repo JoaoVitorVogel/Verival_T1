@@ -18,21 +18,51 @@ public class Dama {
         return 2;
     }
 
-    // Função separada para leitura e interação com usuário
     public static void lerEntradaEProcessar() {
         Scanner sc = new Scanner(System.in);
 
         while (true) {
-            int x1 = sc.nextInt();
-            int y1 = sc.nextInt();
-            int x2 = sc.nextInt();
-            int y2 = sc.nextInt();
+            System.out.print("Digite 4 números entre 0 e 8 separados por espaço (0 0 0 0 para sair): ");
+            String linha = sc.nextLine().trim();
 
-            if (x1 == 0 && y1 == 0 && x2 == 0 && y2 == 0) {
+            if (linha.isEmpty()) {
+                System.out.println("Entrada vazia! Tente novamente.");
+                continue;
+            }
+
+            String[] partes = linha.split("\\s+");
+            if (partes.length != 4) {
+                System.out.println("Erro: Você deve digitar exatamente 4 valores.");
+                continue;
+            }
+
+            int[] valores = new int[4];
+            boolean valido = true;
+            for (int i = 0; i < 4; i++) {
+                try {
+                    valores[i] = Integer.parseInt(partes[i]);
+                    if (valores[i] < 0 || valores[i] > 8) {
+                        System.out.println("Erro: Os valores devem estar entre 0 e 8.");
+                        valido = false;
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Erro: Entrada inválida. Apenas números inteiros são aceitos.");
+                    valido = false;
+                    break;
+                }
+            }
+
+            if (!valido) {
+                continue; // volta para pedir a entrada de novo
+            }
+
+            // condição de parada
+            if (valores[0] == 0 && valores[1] == 0 && valores[2] == 0 && valores[3] == 0) {
                 break;
             }
 
-            int movimentos = menorNumeroMovimentos(x1, y1, x2, y2);
+            int movimentos = menorNumeroMovimentos(valores[0], valores[1], valores[2], valores[3]);
             System.out.println(movimentos);
         }
 
