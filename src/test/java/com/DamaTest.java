@@ -2,6 +2,10 @@ package com;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -114,6 +118,113 @@ public class DamaTest {
             assertFalse(Dama.isCondicaoParada(new int[]{1,0,0,0}));
             assertFalse(Dama.isCondicaoParada(null));
             assertFalse(Dama.isCondicaoParada(new int[]{0,0,0}));
+        }
+    }
+
+    @Nested
+    @DisplayName("Testes de formatação de entrada")
+    class FormatacaoEntradaTests {
+        
+        @Test
+        @DisplayName("parseEntrada: deve aceitar diferentes formatos de espaço")
+        void testParseEntradaComEspacos() {
+            assertArrayEquals(new int[]{1, 2, 3, 4}, Dama.parseEntrada("1  2   3    4")); // múltiplos espaços
+            assertArrayEquals(new int[]{1, 2, 3, 4}, Dama.parseEntrada(" 1 2 3 4 ")); // espaços nas extremidades
+            assertArrayEquals(new int[]{1, 2, 3, 4}, Dama.parseEntrada("1\t2\t3\t4")); // tabulações
+            assertArrayEquals(new int[]{1, 2, 3, 4}, Dama.parseEntrada("1 2\t3  4")); // mistura de espaços e tabulações
+        }
+    }
+
+    @Nested
+    @DisplayName("Testes de entrada e saída do console")
+    class ConsoleIOTests {
+
+        @Test
+        @DisplayName("lerEntradaEProcessar: teste com entradas válidas")
+        void testLerEntradaEProcessar() {
+            String input = "4 4 6 6\n0 0 0 0\n";
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            
+            // Salva as streams originais
+            PrintStream oldOut = System.out;
+            System.setIn(inputStream);
+            System.setOut(new PrintStream(outputStream));
+            
+            try {
+                Dama.lerEntradaEProcessar();
+                String output = outputStream.toString();
+                assertTrue(output.contains("1")); // Deve mostrar 1 movimento
+            } finally {
+                // Restaura as streams originais
+                System.setOut(oldOut);
+                System.setIn(System.in);
+            }
+        }
+
+        @Test
+        @DisplayName("lerEntradaEProcessar: teste com entrada inválida seguida de válida")
+        void testLerEntradaEProcessarComErro() {
+            String input = "invalid\n4 4 6 6\n0 0 0 0\n";
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            
+            PrintStream oldOut = System.out;
+            System.setIn(inputStream);
+            System.setOut(new PrintStream(outputStream));
+            
+            try {
+                Dama.lerEntradaEProcessar();
+                String output = outputStream.toString();
+                assertTrue(output.contains("Erro na entrada")); // Deve mostrar mensagem de erro
+                assertTrue(output.contains("1")); // Deve mostrar 1 movimento após entrada válida
+            } finally {
+                System.setOut(oldOut);
+                System.setIn(System.in);
+            }
+        }
+
+        @Test
+        @DisplayName("lerEntradaEProcessar: teste com múltiplas entradas válidas")
+        void testLerEntradaEProcessarMultiplasEntradas() {
+            String input = "4 4 6 6\n0 0 0 0\n";
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            
+            PrintStream oldOut = System.out;
+            System.setIn(inputStream);
+            System.setOut(new PrintStream(outputStream));
+            
+            try {
+                Dama.lerEntradaEProcessar();
+                String output = outputStream.toString();
+                assertTrue(output.contains("Digite 4 números"));
+                assertTrue(output.contains("1"));
+            } finally {
+                System.setOut(oldOut);
+                System.setIn(System.in);
+            }
+        }
+
+        @Test
+        @DisplayName("lerEntradaEProcessar: teste com entrada que causa NumberFormatException")
+        void testLerEntradaEProcessarComNumberFormatException() {
+            String input = "1 2 3 a\n0 0 0 0\n";
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            
+            PrintStream oldOut = System.out;
+            System.setIn(inputStream);
+            System.setOut(new PrintStream(outputStream));
+            
+            try {
+                Dama.lerEntradaEProcessar();
+                String output = outputStream.toString();
+                assertTrue(output.contains("Erro na entrada"));
+            } finally {
+                System.setOut(oldOut);
+                System.setIn(System.in);
+            }
         }
     }
 }
