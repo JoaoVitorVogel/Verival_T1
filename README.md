@@ -62,36 +62,13 @@ Para cada caso de teste da entrada, seu programa deve imprimir uma única linha 
 2. Na pasta raiz do projeto, execute:
 
 ```bash
-mvn spring-boot:run
+mvn compile
+
+mvn exec:java
 ```
 
 3. Digite as entradas no formato `X1 Y1 X2 Y2`, onde cada valor é um número entre 1 e 8 (inclusive).
 4. Para encerrar o programa, digite `0 0 0 0`.
-
-### Utilizando a API REST
-
-A aplicação também disponibiliza um endpoint REST:
-
-```
-POST /api/rainha/movimentos
-```
-
-Corpo da requisição:
-
-```json
-{
-  "x1": 4,
-  "y1": 4,
-  "x2": 6,
-  "y2": 2
-}
-```
-
-Resposta:
-
-```
-1
-```
 
 ## Lógica da Solução
 
